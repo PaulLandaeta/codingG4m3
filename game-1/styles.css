@@ -1,0 +1,24 @@
+h1 {
+    font-size: 36px !important; /* Override the default heading size */
+  }
+
+  .hidden-div {
+    display: none!important;
+  }
+
+  .section .div {
+    display: flex;
+  }
+  
+  /* add a blue underline under page heading */
+  .page-heading:after {
+    
+    bottom: 26px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: blue;
+    display: inline-block;
+    content: "";
+    position: relative;
+  }
