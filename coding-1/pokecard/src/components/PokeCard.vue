@@ -1,7 +1,11 @@
 <template>  
 <div class="container">
-  <b-form-input v-model="pokemonName" placeholder="Enter Pokemon name"></b-form-input>
-  <b-button @click="getPokemon">Search</b-button>
+  <b-container class="p-2">
+    <b-row no-gutters cols="2">
+      <b-col md="10"><b-form-input v-model="pokemonName" placeholder="Enter Pokemon name"></b-form-input></b-col>
+      <b-col md="2"><b-button block @click="getPokemon" variant="primary">Search</b-button></b-col>
+    </b-row>
+  </b-container>
   <b-card no-body class="overflow-hidden">
     <b-row no-gutters>
       <b-col md="6">
@@ -29,7 +33,7 @@
               </div>
             </div>
             <!-- TODO: convert in a component -->
-            <b-container class="bv-example-row mb-3 text-left">
+            <b-container class="m-3 text-left">
               <b-row cols="2" v-for="(stat, index) in pokemon.stats" :key="'value'+index">
                 <b-col>{{ stat.stat.name }}</b-col>
                 <b-col>{{ stat.base_stat }}</b-col>
