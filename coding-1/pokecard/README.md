@@ -1,5 +1,6 @@
 # pokecard
 
+[Live Project](https://pokemoncard-70712.web.app)
 ## Project setup
 ```
 npm install
@@ -20,5 +21,3 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

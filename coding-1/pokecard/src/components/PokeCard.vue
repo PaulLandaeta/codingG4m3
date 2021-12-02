@@ -1,24 +1,37 @@
 <template>  
 <div class="container">
   <b-container class="p-2">
-    <b-row no-gutters cols="2">
+    <b-row no-gutters cols="2" class="p-1">
       <b-col md="10"><b-form-input v-model="pokemonName" placeholder="Enter Pokemon name"></b-form-input></b-col>
       <b-col md="2"><b-button block @click="getPokemon" variant="primary">Search</b-button></b-col>
     </b-row>
+    <b-alert 
+      :show="dismissCountDown"
+      dismissible
+      variant="warning"
+      @dismissed="dismissCountDown=0"
+      @dismiss-count-down="countDownChanged"
+      >Pokemon not Found
+      <b-progress
+        variant="warning"
+        :max="dismissSecs"
+        :value="dismissCountDown"
+        height="4px"
+      ></b-progress></b-alert>
   </b-container>
   <b-card no-body class="overflow-hidden">
     <b-row no-gutters>
       <b-col md="6">
         <b-card-img :src="imageUrl + pokemon.id + '.png'" alt="Image" class="rounded-0"></b-card-img>
       </b-col>
-      <b-col md="6" v-if="pokemon">
+      <b-col md="6" v-if="pokemon.id != 0">
         <b-card-body v-bind:title="pokemon.name">
           <b-card-text>
             <div class="d-flex justify-content-between">
               <div>
                 <b>Type:</b>
                 <span v-for="(typeObject, index) in pokemon.types" :key="'value'+index">
-                  <span class="badge badge-primary">{{ typeObject.type.name}}</span>
+                  <span class="m-1 badge badge-primary">{{ typeObject.type.name}}</span>
                 </span>
               </div>
               </div>
@@ -42,6 +55,18 @@
           </b-card-text>
         </b-card-body>
       </b-col>
+      <b-col md="6" v-if="pokemon.id == 0">
+        <b-card-body>
+          <b-card-text>
+            <div class="d-flex justify-content-center">
+              <div>
+                <p>Pokemon not found</p>
+                <b>Enter a valid Pokemon Name</b>
+              </div>
+            </div>
+          </b-card-text>
+        </b-card-body>
+      </b-col>
     </b-row>
   </b-card>
 </div>
@@ -55,16 +80,12 @@ export default {
     'pokemonUrl'
   ],
   data: () => {
-    return {
-      pokemons: [{
-        id:''
-      }],
-      pokemonName: 'pikachu',
-      pokemon: {
-        id:'2',
-      },
-      nextUrl: '',
-      currentUrl: ''
+    return { 
+      pokemonName: '',
+      pokemon: null,
+      dismissSecs: 5,
+      dismissCountDown: 0,
+      showDismissibleAlert: false
     }
   },
   methods: {
@@ -75,19 +96,27 @@ export default {
         .then(data => {
             this.pokemon = data;
             console.log(this.pokemon);
-            if(this.pokemon.url!= '') {
+            if(this.pokemon.url) {
               this.pokemon.id = this.pokemon.url.split('/').filter( function(part){
               return !!part}).pop();
             }
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+          console.error(error);
+           this.dismissCountDown = this.dismissSecs
+        });
     },
-    setPokemonUrl(url) {
-        this.$emit('setPokemonUrl', url);
-      }
+    setDefault() {
+      this.pokemon = {
+        id:'0',
+      };
+    },
+    countDownChanged(dismissCountDown) {
+        this.dismissCountDown = dismissCountDown
+    } 
   },
   created() {
-    this.getPokemon();
+    this.setDefault();
     console.log(this.pokemon);
   }
 }
